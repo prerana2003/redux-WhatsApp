@@ -1,4 +1,4 @@
-import { AppBar, Avatar, Box, Toolbar, Typography,List, Grid, ListItemAvatar, ListItemText, Button, IconButton, ListItem} from "@mui/material"
+import { Box, Toolbar, Typography,List, Grid, ListItemText, Button, ListItem} from "@mui/material"
 import React from "react";
 import { useState, useEffect } from "react";
 import DisplayAppbar from "./DisplayAppBar";
@@ -8,9 +8,10 @@ import MicOutlinedIcon from '@mui/icons-material/MicOutlined';
 import {InputBase} from "@mui/material";
 import SendIcon from '@mui/icons-material/Send';
 import { useDispatch, useSelector } from "react-redux";
-import { setNewMessage } from "../redux/contactsSlice";
+import backImg from '../assets/back.jpeg'
 import addNewMsg from "../redux/newMsg";
 import moment from "moment";
+import { useParams } from "react-router-dom";
 
 const font = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
 
@@ -35,8 +36,10 @@ function MyChat({chat}){
 
 const DisplayContact = () =>{
     const contacts = useSelector((state)=>state.contacts.contacts)
-    const selectedContact = useSelector((state)=>state.selectedContact.selectedContact)
     const dispatch = useDispatch();
+
+    const {id} = useParams();
+
 
     let myMsg={"Msg": '',
                 "time":'',
@@ -46,9 +49,9 @@ const DisplayContact = () =>{
     let chatsArr=[];
 
     function displayChats(){
-        if(selectedContact){
-            for(let i=0;i<selectedContact["Messages"].length;i++){
-                chatsArr.push(<MyChat key={i} chat = {selectedContact["Messages"][i]}/>)
+        if(id){
+            for(let i=0;i<contacts[id-1]["Messages"].length;i++){
+                chatsArr.push(<MyChat key={i} chat = {contacts[id-1]["Messages"][i]}/>)
             }
         }
     }
@@ -59,10 +62,10 @@ const DisplayContact = () =>{
         <Grid container direction='column' position='relative'>
 
             <Grid item md={12} lg={12} height='72px'>
-                <DisplayAppbar/>
+                <DisplayAppbar id={id}/>
             </Grid>
 
-            <Grid  item md={12} lg={12} padding={0}  paddingLeft={6}  >
+            <Grid  item md={12} lg={12} paddingLeft={6}  sx={{marginTop:-1, backgroundImage:(id)? `url(${backImg})` : ''}}>
                 <List  sx={{position:'revert', overflowY:'scroll',scrollbarWidth: 'thin', scrollbarGutter:"-moz-initial", height:'77vh', maxHeight:'fit-content',scrollbarWidth: 'thin'}}>
                     {chatsArr}
                 </List>
@@ -87,10 +90,7 @@ const DisplayContact = () =>{
                         
                     </Grid>
                     <Grid item xs={9} sm={4} md={5.6} lg={7}>
-                        <Box
-                            component="form"
-                            sx={{ backgroundColor:'white', borderRadius:'10px', p: '3px 5px', display: 'flex', alignItems: 'center' }}
-                            >
+                        <Box component="form" sx={{ backgroundColor:'white', borderRadius:'10px', p: '3px 5px', alignItems: 'center' }}>
                             <InputBase overflow='auto' maxHeight='200px'
                                 sx={{ ml: 1, flex: 1, padding:0, fontSize:'14.2px', color:'#54656f', fontFamily:font}}
                                 placeholder=" Type a message"
@@ -102,7 +102,6 @@ const DisplayContact = () =>{
                                     setNewMsg({"Msg":event.target.value, "time":time, "type":"sent"}): setNewMsg(myMsg)
                                 }}
                             />
-                            
                         </Box>
                     </Grid>
                     <Grid item xs={1} sm={1} md={1} lg={1}>
@@ -110,7 +109,7 @@ const DisplayContact = () =>{
                         <Button onClick={()=>{
                             
                             if(newMsg["Msg"]){
-                                dispatch(addNewMsg({newMsg}))
+                                dispatch(addNewMsg({newMsg,id}))
                                 setNewMsg(myMsg)
                             }}} sx={{color:"#54656f", ':hover':{backgroundColor:'#e9edef'}}} ><SendIcon fontSize="medium" /></Button>
                         :

@@ -1,4 +1,4 @@
-import { Divider, Grid, List, Box, Stack } from '@mui/material'
+import { Divider, Grid, List, Stack } from '@mui/material'
 import {ListItem} from '@mui/material'
 import {ListItemText} from '@mui/material'
 import {Typography} from '@mui/material'
@@ -6,18 +6,17 @@ import {ListItemAvatar} from '@mui/material'
 import {Avatar} from '@mui/material'
 import React from 'react'
 import Archived from './archived'
-import { useDispatch, useSelector } from 'react-redux'
-import { setSelectedContact } from '../redux/selectedContactSlice'
+import { useSelector } from 'react-redux'
+import { NavLink, useLocation} from 'react-router-dom'
 
 const font = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
 
 const EmpItem = ({contact}) =>{
-    const dispatch = useDispatch()
-    const selectedContact = useSelector((state)=>state.contacts.selectedContact)
+    const selectedContactID = useLocation().pathname.slice(9,useLocation().pathname.length)
     
     return(
-        <Box>
-            <Grid container key={contact['ID']} onClick={()=>dispatch(setSelectedContact(contact))} alignItems='center' style={{backgroundColor: (selectedContact && contact['ID'] === selectedContact['ID']) ? '#F0F2F5' : ''}} sx={{':hover':{backgroundColor:'#F0F2F5'} }}>
+        <NavLink to={`/contact/${contact.ID}`} style={{textDecoration:'none'}}>
+            <Grid container key={contact['ID']-1}  alignItems='center' style={{backgroundColor: (selectedContactID === contact.ID) ? '#F0F2F5' : 'white'}} sx={{':hover':{backgroundColor:'#F0F2F5'} }}>
                 <ListItem component= "li" id={contact['ID']} sx={{padding:'0px 30px 0px 18px'}}>
                     <Grid item xs={2}>
                         <ListItemAvatar>
@@ -27,7 +26,7 @@ const EmpItem = ({contact}) =>{
                     <Grid item xs={10}>
                         <Grid container direction='column'>
                             <Grid container direction='row'>
-                                <Grid item xs={10} margin={0}>
+                                <Grid item xs={9.2} sm={9.8} margin={0}>
                                     <ListItemText
                                         primary={
                                             <React.Fragment>
@@ -38,7 +37,7 @@ const EmpItem = ({contact}) =>{
                                         }
                                     />
                                 </Grid>
-                                <Grid  item xs={2} padding={0} margin={0}>
+                                <Grid  item xs={2.8} sm={2.2} padding={0} margin={0}>
                                     <ListItemText
                                         secondary={
                                             <React.Fragment>
@@ -66,11 +65,11 @@ const EmpItem = ({contact}) =>{
                 </ListItem>
             </Grid>
             <Divider variant="inset" component="li" style={{listStyle:'none'}} />
-        </Box>
+        </NavLink>
     )
 }
 
-const ContactList = ({searchValue,}) =>{
+const ContactList = ({searchValue}) =>{
     let contacts = useSelector((state)=>state.contacts.contacts)
     
     let contactListArr = []
@@ -78,7 +77,7 @@ const ContactList = ({searchValue,}) =>{
     function showEmployees(contacts){
         if(contacts){
             for(let i=0;i<contacts.length;i++){
-                contactListArr.push(<EmpItem key= {i}  contact = {contacts[i]}/>)
+                contactListArr.push(<EmpItem key= {i}  contact = {contacts[i]} index = {i}/>)
             }
         }
     }

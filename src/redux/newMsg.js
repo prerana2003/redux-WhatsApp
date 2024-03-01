@@ -1,14 +1,12 @@
 import { setNewMessage } from "./contactsSlice";
-import { setNewMsgInSelectedContact } from "./selectedContactSlice";
 
-const addNewMsg = ({newMsg}) =>{
+const addNewMsg = ({newMsg,id}) =>{
     return (dispatch,getState)=>{
         const state = getState();
-        const contactIndex = state.contacts.contacts.findIndex((obj)=> obj["ID"]===state.selectedContact.selectedContact["ID"])
-        const msgArr = [...state.selectedContact.selectedContact.Messages]
+        const contactIndex = id-1
+        const msgArr = [...state.contacts.contacts[contactIndex].Messages]
         msgArr.push(newMsg)
-        dispatch(setNewMessage({contactIndex:contactIndex,msgArr:newMsg}))
-        dispatch(setNewMsgInSelectedContact({contactIndex:contactIndex,msgArr:newMsg}))
+        dispatch(setNewMessage({contactIndex:contactIndex,msgArr:msgArr}))
     }
 }
 

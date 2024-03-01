@@ -9,7 +9,7 @@ export const contactsSlice= createSlice({
     initialState,
     reducers:{
         setNewMessage: (state, action) => {
-            state.contacts[action.payload.contactIndex].Messages.push(action.payload.msgArr)
+            state.contacts[action.payload.contactIndex].Messages=action.payload.msgArr
         },
     }
 }) 

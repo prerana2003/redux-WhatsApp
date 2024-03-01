@@ -8,7 +8,7 @@ import AddIcon from '@mui/icons-material/Add';
 import myProfile from '../assets/profile1.jpg'
 
 const font = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
-const drawerWidth = 446;
+const drawerWidth = 430;
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
     ({ theme, open }) => ({
@@ -33,10 +33,17 @@ const PersistentDrawer=({btnClick, open, theme, handleDrawerClose})=>{
     return(
         <Drawer
             sx={{
-            width: drawerWidth,
             flexShrink: 0,
             '& .MuiDrawer-paper': {
-                width: drawerWidth,
+                xs:{
+                    width: "100%",
+                },
+                sm:{
+                    width: 384,
+                },
+                md:{
+                    width: drawerWidth,
+                },
                 boxSizing: 'border-box',
             },
             }}
